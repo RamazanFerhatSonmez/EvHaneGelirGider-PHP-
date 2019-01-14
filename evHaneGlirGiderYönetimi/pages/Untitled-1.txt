@@ -1,0 +1,32 @@
+<?php 
+
+include 'dbConfig.php';
+
+    session_start();
+    $kullaniciAd=$_POST['kullaniciAd'];  
+    $kullaniciSifre=$_POST['kullaniciSifre'];  
+  if(isset($_POST['kullaniciAd']) && isset($_POST['kullaniciSifre'])){
+      echo("Handling POST data...\n");
+      $sql = "SELECT * FROM kullanicalar WHERE kullaniciAd = '$kullaniciAd' AND kullaniciSifre = '$kullaniciSifre'";
+      $stmt = $pdo->query($sql);
+  }
+    $sql = "SELECT * FROM kullanicilar WHERE kullaniciAd=? AND 
+    kullaniciSifre=? ";
+    $query = $conn->prepare($sql);
+    $query->execute(array($kullaniciAd,$kullaniciSifre));
+    $row = $query->fetch();
+    
+    if($query->rowCount() >=1)  
+    {  
+
+        $_SESSION['kullaniciId']=$row['kullaniciId'];
+       // $_SESSION['login_user']=$uye_mail;
+        header('Location: loginUser.php');        
+  
+    }  
+    else  
+    {        
+      
+      echo "<script>alert('E-mail veya Parola Yanlış !')</script>";       
+      header('Location: login.php');
+    }  
